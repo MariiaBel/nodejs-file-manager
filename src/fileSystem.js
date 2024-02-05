@@ -10,6 +10,7 @@ export default class FileSystem {
         const fsNodes = await fs.readdir(this.stateInstance.currentDirectory,{withFileTypes: true})
 
         fsNodes
+            .filter(dirent => dirent.isSymbolicLink())
             .sort((left,right) => right.isDirectory() - left.isDirectory())
             .forEach((dirent, index) => {
                 console.log(`${index} - ${dirent.name} - ${dirent.isDirectory() ? 'directory' : 'file' }`)

@@ -27,9 +27,9 @@ export default class State {
     set currentDirectory(currentDirectory) {
         console.log(currentDirectory, 'current dir ++++++')
         console.log(typeof currentDirectory)
-        if(typeof currentDirectory === 'string') currentDirectory = path.dirname(currentDirectory)
+        // if(typeof currentDirectory === 'string') currentDirectory = path.dirname(currentDirectory)
         
-        console.log(currentDirectory, 'current dir ++++++')
+        // console.log(currentDirectory, 'current dir ++++++')
         this._data.currentDirectory = currentDirectory
     }
 }
