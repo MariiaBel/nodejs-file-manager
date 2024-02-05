@@ -10,13 +10,14 @@ export class App {
     init = async() => {
         this.readlineInstance = new Readline()
         await this.readlineInstance.init()
-        
+
         /** Welcome message
          * @prop {string} value
          */
         process.argv.forEach(value => {
             if(value.startsWith(options.userName + '=')) {
                 this.userName = value.split('=')[1]
+                this.readlineInstance.userName = this.userName
                 this.readlineInstance.write('welcome', this.userName)
                 this.readlineInstance.initEventEmitter()
             }
@@ -24,7 +25,7 @@ export class App {
 
         if(this.userName.length === 0) {
             this.readlineInstance.write('error.input')
-            this.readlineInstance.close()
+            await this.readlineInstance.close()
         }
     }
 }
