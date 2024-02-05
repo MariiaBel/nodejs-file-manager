@@ -1,5 +1,6 @@
 import options from "./data/options.js"
 import Readline from "./readline.js"
+import Message from "./message.js"
 export class App {
     userName = ''
     readlineInstance = {}
@@ -8,24 +9,23 @@ export class App {
     }
 
     init = async() => {
-        this.readlineInstance = new Readline()
-        await this.readlineInstance.init()
 
         /** Welcome message
          * @prop {string} value
          */
-        process.argv.forEach(value => {
+
+        for(const value of process.argv) {
             if(value.startsWith(options.userName + '=')) {
                 this.userName = value.split('=')[1]
-                this.readlineInstance.userName = this.userName
-                this.readlineInstance.write('welcome', this.userName)
-                this.readlineInstance.initEventEmitter()
+                break
             }
-        })
+        }
 
         if(this.userName.length === 0) {
-            this.readlineInstance.write('error.input')
-            await this.readlineInstance.close()
+            console.log(Message.get('error.input'))
+        } else{
+            this.readlineInstance = new Readline()
+            await this.readlineInstance.init(this.userName)
         }
     }
 }

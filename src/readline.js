@@ -1,6 +1,7 @@
 import * as readline from 'readline/promises'
 import Message from './message.js';
 import options from './data/options.js';
+import OS from './os.js'
 
 export default class Readline {
     static instance
@@ -8,7 +9,7 @@ export default class Readline {
     commands = {}
     _data = {
         username: '',
-        path_to_working_directory: ''
+        currentDirectory: ''
     }
 
     constructor() {
@@ -20,27 +21,44 @@ export default class Readline {
         this._data.username = username
     }
 
-    async init() {
+    get userName() {
+        return this._data.username
+    }
+
+    get currentDirectory() {
+        return this._data.currentDirectory
+    }
+
+    set currentDirectory(currentDirectory) {
+        this._data.currentDirectory = currentDirectory
+    }
+
+    async init(username) {
+        this.userName = username
+        this.currentDirectory = OS.getHomeDirectory()
+
         this.commands = await options.commands
         this.readlineInterface = readline.createInterface(process.stdin, process.stdout)
+        this.write('welcome', this.userName)
+        this.writeCurrentDirectory()
+        this.initEventEmitter()
     }
     
     initEventEmitter() {
         this.readlineInterface
             .on('line', (line) => {
-                console.log(line)
-                console.log(this.commands[line])
                 if(this.commands[line]) {
                     this.commands[line]()
                 } else {
-                    let message = Message.get('error.input')
-                    console.log(message)
+                    console.log(Message.get('error.input'))
                 }
+
+                this.writeCurrentDirectory()
+
             }).on('close', async() => {
-                await this.close()
-                let message = Message.get('goodbye', this._data.username)
-                console.log(message)
-                // this.write('goodbye', this._data.username)
+                await this.closeWithGoodbye()
+            }).on('SIGINT', async() => {
+                await this.closeWithGoodbye()
             })
     }
 
@@ -49,11 +67,20 @@ export default class Readline {
         if(!message) {
             message = Message.get('error.operation')
         } else {
-            this.readlineInterface.write(message)
+            console.log(message)
         }
+    }
+
+    writeCurrentDirectory() {
+        this.write('path_to_working_directory', this._data.currentDirectory)
     }
 
     async close() {
         await this.readlineInterface.close()
+    }
+
+    async closeWithGoodbye() {
+        await this.close()
+        this.write('goodbye', this._data.username)
     }
 }
