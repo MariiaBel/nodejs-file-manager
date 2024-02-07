@@ -1,0 +1,13 @@
+{
+  "name": "nodejs-file-manager",
+  "version": "1.0.0",
+  "description": "File Manager implementation by Node.js APIs.",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "npx cross-env NODE_OPTIONS='--no-warnings' node src/app.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

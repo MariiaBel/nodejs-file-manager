@@ -1,0 +1,7 @@
+{
+    "welcome": "Welcome to the File Manager, __username__!",
+    "goodbye": "Thank you for using File Manager, __username__, goodbye!",
+    "path_to_working_directory": "You are currently in __pathToWorkingDirectory__",
+    "error.input": "Invalid input",
+    "error.operation": "Operation failed"
+}
